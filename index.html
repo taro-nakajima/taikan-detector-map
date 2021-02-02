@@ -1,0 +1,229 @@
+<head>
+<title >Neutron Laue Diffraction Pattern Simulator for TAIKAN(BL15)</title>
+<link rel="stylesheet" type="text/css" href="./common.css">
+<script type="text/javascript" src="./taikan_detector_map.js?20201203"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
+<meta charset="UTF-8">
+</head>
+<body onload="init_draw()">
+    <div class="fullbox">
+    <table class="header_table">
+        <tr>
+            <td ><font class="mytitle">Neutron Laue Diffraction Pattern Simulator for TAIKAN(BL15)</font> <font color="white">ver</font> <font color="white" id="verNum"></font></td>
+            <!--td class="menu_item"><a href="https://sites.google.com/view/hrc-web-tools/web-tools/laue_simulator" target="_blank" class="headerLink">Tutorial</a></td>
+            <td class="menu_item"><a href="https://sites.google.com/view/hrc-web-tools/web-tools/laue_simulator/laue_sim_tutorial_jp" target="_blank" class="headerLink">Tutorial (JP)</a></td>
+            <td class="menu_item"><a href="https://github.com/taro-nakajima/HRC_Idp_plot" target="_blank" class="headerLink">Suppl. tool</a></td-->
+            <td class="dummy_text">-----</td>
+        </tr>
+    </table>
+    </div>
+<br />
+
+<div class="mainbody">
+<div class="dummy_space1" id="sec_DetMap">-</div>
+<div class="dummy_space2">-</div>
+    
+<table>
+        <tr>
+            <td>
+                <div class="section_02">Detector map </div>
+                <canvas id="CanvasDetMap" width="900" height="380" class="box"></canvas><br />
+                <br />
+                <div class="section_02">Sample orientation viewer</div>
+                <canvas id="OrientationViewer" class="box"></canvas><br />
+                <font color="red"><i><b>a</b></i>* &rarr;</font>, <font color="green"><i><b>b</b></i>* &rarr;</font>, <font color="blue"><i><b>c</b></i>* &rarr;</font><br />
+    
+            </td>
+            <td width=20>
+            </td>
+            <td valign="top">
+                <div class="tab_wrap">
+                    <input id="tab1" type="radio" name="tab_btn" checked>
+                    <input id="tab2" type="radio" name="tab_btn">
+                    
+                    <div class="tab_area">
+                    <label class="tab1_label" for="tab1">Setting</label>
+                    <label class="tab2_label" for="tab2">Simulation</label>
+                    </div>
+                    <div class="panel_area">
+                    <div id="panel1" class="tab_panel">
+
+                        <!-- for panel 1 "Setting"--------------------------------------------->
+                        <div class="section_02">Crystal structure </div>
+                        <b>Lattice constants</b><br />
+                        <i>a</i> = <input size="5" id="a" value="5"> &Aring;,
+                        <i>b</i> = <input size="5" id="b" value="5"> &Aring;,
+                        <i>c</i> = <input size="5" id="c" value="5"> &Aring;
+                        <br />
+                        <i>&alpha;</i> = <input size="5" id="alpha" value="90"> deg., 
+                        <i>&beta;</i> = <input size="5" id="beta" value="90"> deg.,
+                        <i>&gamma;</i> = <input size="5" id="gamma" value="90"> deg.<br />  
+                        <input type="button" value="   Set lattice  " onclick="draw()"/><br />
+                        <br />
+                        <b>Reflection condition</b><br />
+                        <select id="RefCon" onchange="set_RefCon_and_draw()">
+                            <option value="none" selected>none</option>
+                            <option value="H+K=2n">H+K=2n</option>
+                            <option value="H+L=2n">H+L=2n</option>
+                            <option value="K+L=2n">K+L=2n</option>
+                            <option value="H+K+L=2n">H+K+L=2n</option>
+                            <option value="H,K,L all even or all odd">H,K,L all even or all odd</option>
+                            <option value="-H+K+L=3n">-H+K+L=3n</option>
+                        </select><br />
+                        <br />
+        
+                        <b>Orientation </b><br />
+                        <b><i>u</i></b> = (<input size="6" id="u1" value="1">,<input size="6" id="u2" value="0">,<input size="6" id="u3" value="0">)<br />
+                        <b><i>v</i></b> = (<input size="6" id="v1" value="0">,<input size="6" id="v2" value="1">,<input size="6" id="v3" value="0">)<br />
+                        (<b><i>u</i></b>: diraction parallel to incident beam. <br />
+                        <b><i>v</i></b>: another direction in the beam horizontal plane.) <br />
+                        <input type="button" value="   Set orientation  " onclick="draw()"/><br />
+                        <br />
+
+                        <b><i>q</i>-vectors </b><br />
+                        <input type="checkbox" id="q1_checkbox" onchange="draw_DetMap()"><b><i>q</i></b><sub>1</sub> = (<input size="6" id="q1_h" value="0">,<input size="6" id="q1_k" value="0">,<input size="6" id="q1_l" value="0">), show indices<input type="checkbox" id="q1_showHKL" onchange="draw_DetMap()"><br />
+                        <input type="checkbox" id="q2_checkbox" onchange="draw_DetMap()"><b><i>q</i></b><sub>2</sub> = (<input size="6" id="q2_h" value="0">,<input size="6" id="q2_k" value="0">,<input size="6" id="q2_l" value="0">), show indices<input type="checkbox" id="q2_showHKL" onchange="draw_DetMap()"><br />
+                        <input type="checkbox" id="q3_checkbox" onchange="draw_DetMap()"><b><i>q</i></b><sub>3</sub> = (<input size="6" id="q3_h" value="0">,<input size="6" id="q3_k" value="0">,<input size="6" id="q3_l" value="0">), show indices<input type="checkbox" id="q3_showHKL" onchange="draw_DetMap()"><br />
+                        <br />
+
+
+                        <div class="section_02">Incident Neutron Beam </div>
+                        <b>&lambda; min</b><br />
+                        <table>
+                            <tr>
+                                <td>
+                                    <input type="range" value="0.7" min="0.6" max="7.7" step="0.05" id="Lambda_min" oninput="Lambda_min_adjust_and_draw()">
+                                </td>
+                                <td>
+                                    <input size="5" value="300" id="Lambda_min_disp"> &Aring;
+                                </td>
+                            </tr>
+                        </table>
+                        <br />        
+
+
+                    </div>
+                    <div id="panel2" class="tab_panel">
+
+                        <!-- for panel 2 "Simulation"--------------------------------------------->
+                        <!--div class="section_02">Load observed Laue pattern </div>
+                        <input type="file" onchange="getFile(this.files)"><br />
+                        <input type="button" value="   Remove file  " onclick="removeFile()"><br />
+                        <br /-->
+
+                        <div class="section_02">Sample rotation </div>
+                        <input type="radio" name="rotType" value="free" id="freeRot" class="rotTypeButton" onchange="setFreeRotMode()" checked><label target="freeRot"> <b>Free rotation</b></label><br />
+                        <input size="5" id="rot_x_deg" value="1"> deg. <input type="button" value="  rotate x+  " id="rot_x_plus" onclick="rot_and_draw(this.id)" /><input type="button" value="  rotate x-  " id="rot_x_minus" onclick="rot_and_draw(this.id)" /><br />
+                        <input size="5" id="rot_y_deg" value="1"> deg. <input type="button" value="  rotate y+  " id="rot_y_plus" onclick="rot_and_draw(this.id)" /><input type="button" value="  rotate y-  " id="rot_y_minus" onclick="rot_and_draw(this.id)" /><br />
+                        <input size="5" id="rot_z_deg" value="1"> deg. <input type="button" value="  rotate z+  " id="rot_z_plus" onclick="rot_and_draw(this.id)" /><input type="button" value="  rotate z-  " id="rot_z_minus" onclick="rot_and_draw(this.id)" /><br />
+                        Set the current orientation as "&omega;=<input type="text" size=5 id="currentOmega"> deg" <input type="button" value=" set " onclick="setOmegaRotMode()"><br />
+                        <br />
+                        <input type="radio" name="rotType" value="omega" id="omegaRot" class="rotTypeButton" disabled><label target="freeRot"> <b>&omega; rotation</b></label><br />
+                        Current &omega;: <font id="currentOmega_disp">0</font> deg.<br />
+                        Go to &omega;= <input type="text" size=5 id="targetOmega"> deg <input type="button" value=" Go " id="omgRotGoBtn" onclick="omegaRot_and_draw()"><br />                        
+                        <!--div class="box2">
+                            &psi;<sub>h</sub>= -(&omega;-&omega;<sub>offset</sub>), &omega;<sub>offset</sub>=<font id="Omg_ofst"></font> deg<br />
+                        (&psi;<sub>h</sub>: angle between <b><i>k</i></b><sub>i</sub> and <b><i>u</i></b><sub>h</sub>=(<i>u</i><sub>x</sub>,<i>u</i><sub>y</sub>,0))<br />
+                        </div-->
+                        <br />
+                        <div class="section_02">Target reflection </div>
+                        (<i>H</i><sub>t</sub>,<i>K</i><sub>t</sub>,<i>L</i><sub>t</sub>)=(<input size="5" id="Ht" value="0">,<input size="5" id="Kt" value="0">,<input size="5" id="Lt" value="0">)
+                        <input type="button" value="Set" onclick="draw_DetMap()"><br />
+                        |<b>Q</b>|(=2&pi;/<i>d</i>) = <font id="Q_len"></font> A<sup>-1</sup><br />
+                        &phi; = <font id="phi"></font>  deg<br />
+                        &phi;<sub>h</sub> = <font id="phih"></font> deg<br />
+                        &phi;<sub>v</sub> = <font id="phiv"></font> deg<br />
+                        &lambda; = <font id="lambda"></font> A<br />
+                        Azimuth = <font id="Azimuth"></font> deg<br />
+
+                        <br />
+                        <div class="section_02">UB matrix </div>
+
+                        <table>
+                            <tr>
+                                <td rowspan="3" width="3" class="matrix_left"></td>
+                                <td><i>Q</i><sub>x</sub></td>
+                                <td rowspan="3" width="3" class="matrix_right"></td>
+                                <td></td>
+                                <td rowspan="3" width="3" class="matrix_left"></td>
+                                <td>
+                                    <input type="text" size="5" id="as_x">
+                                </td>
+                                <td>
+                                    <input type="text" size="5" id="bs_x">
+                                </td>
+                                <td>
+                                    <input type="text" size="5" id="cs_x">
+                                </td>
+                                <td rowspan="3" width="3" class="matrix_right"></td>
+                                <td rowspan="3" width="3" class="matrix_left"></td>
+                                <td><i>H</i></td>
+                                <td rowspan="3" width="3" class="matrix_right"></td>
+                            </tr>
+                            <tr>
+                                <td><i>Q</i><sub>y</sub></td>
+                                <td>=</td>
+                                <td>
+                                    <input type="text" size="5" id="as_y">
+                                </td>
+                                <td>
+                                    <input type="text" size="5" id="bs_y">
+                                </td>
+                                <td>
+                                    <input type="text" size="5" id="cs_y">
+                                </td>
+                                <td><i>K</i></td>
+                            </tr>
+                            <tr>
+                                <td><i>Q</i><sub>z</sub></td>
+                                <td></td>
+                                <td>
+                                    <input type="text" size="5" id="as_z">
+                                </td>
+                                <td>
+                                    <input type="text" size="5" id="bs_z">
+                                </td>
+                                <td>
+                                    <input type="text" size="5" id="cs_z">
+                                </td>
+                                <td><i>L</i></td>
+                            </tr>
+                        </table>
+                        <br />
+                        <div class="section_02">Camera angle </div>
+                        <table>
+                            <tr>
+                                <td>
+                                    Horizontal: 
+                                </td>
+                                <td>
+                                    <input type="range" value="0" min="-60" max="60" step="1" id="cam_phi" oninput="draw_OriViewer()">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Vertical: 
+                                </td>
+                                <td>
+                                    <input type="range" value="0" min="0" max="90" step="1" id="cam_theta" oninput="draw_OriViewer()">
+                                </td>
+                            </tr>
+                        </table>
+                        <br />
+
+
+                    </div>
+                    </div>
+                </div>
+
+
+
+
+            </td>
+        </tr>
+</table>
+<br />
+
+<div class="footer"> Version <font id="verNum2"></font> by D. Kawana and <a href="https://nakajima.issp.u-tokyo.ac.jp" target="_blank">T. Nakajima</a> in ISSP-NSL, 2020.</div>
+</div> <!--end of mainbody-->
+</body>
