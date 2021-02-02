@@ -495,6 +495,10 @@ function phihv2pixels(phih,phiv){    // convert phih to detector number
             delta_pixels[0] = -999;
     }
 
+    if((delta_pixels[1]>BankHeight_upper[bankNum]*mm2Xpixel)||(delta_pixels[1]<BankHeight_lower[bankNum]*mm2Xpixel)){
+        delta_pixels[0] = -999;
+    }
+
     return delta_pixels; 
 
 }
