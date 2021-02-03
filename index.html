@@ -117,6 +117,7 @@
                         <input size="5" id="rot_y_deg" value="1"> deg. <input type="button" value="  rotate y+  " id="rot_y_plus" onclick="rot_and_draw(this.id)" /><input type="button" value="  rotate y-  " id="rot_y_minus" onclick="rot_and_draw(this.id)" /><br />
                         <input size="5" id="rot_z_deg" value="1"> deg. <input type="button" value="  rotate z+  " id="rot_z_plus" onclick="rot_and_draw(this.id)" /><input type="button" value="  rotate z-  " id="rot_z_minus" onclick="rot_and_draw(this.id)" /><br />
                         Set the current orientation as "&omega;=<input type="text" size=5 id="currentOmega"> deg" <input type="button" value=" set " onclick="setOmegaRotMode()"><br />
+                        (&omega;-rot. direction <input type="radio" name="rotdir" value="CCW" id="omg_CCW" class="rotTypeButton" checked><label target="freeRot"> CCW</label><input type="radio" name="rotdir" value="CW" id="omg_CW" class="rotTypeButton" ><label target="freeRot"> CW</label>)<br />
                         <br />
                         <input type="radio" name="rotType" value="omega" id="omegaRot" class="rotTypeButton" disabled><label target="freeRot"> <b>&omega; rotation</b></label><br />
                         Current &omega;: <font id="currentOmega_disp">0</font> deg.<br />

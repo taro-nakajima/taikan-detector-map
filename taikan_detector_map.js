@@ -137,7 +137,12 @@ function Lambda_min_adjust_and_draw(){
 function omegaRot_and_draw(){
     let targetOmega=Number(document.getElementById("targetOmega").value);
     const deltaOmega = (targetOmega-Omega)/180.0*Math.PI;
-    xyz_rotation(2,deltaOmega);    //"2" means rotation about the z axis. a minus sign is necessary because directions of omega- and z-rotations are opposite to each other.
+    if(document.getElementById("omg_CCW").checked){
+        xyz_rotation(2,deltaOmega);    //"2" means rotation about the z axis. a minus sign is necessary because directions of omega- and z-rotations are opposite to each other.
+    }
+    else{
+        xyz_rotation(2,-deltaOmega);    //"2" means rotation about the z axis. a minus sign is necessary because directions of omega- and z-rotations are opposite to each other.
+    }
     showUBmatrix();
     draw_DetMap();
     draw_OriViewer();
@@ -608,6 +613,8 @@ function setFreeRotMode(){
     document.getElementById("rot_x_deg").disabled=false;
     document.getElementById("rot_y_deg").disabled=false;
     document.getElementById("rot_z_deg").disabled=false;
+    document.getElementById("omg_CCW").disabled=false;
+    document.getElementById("omg_CW").disabled=false;
 }
 
 function setOmegaRotMode(){
@@ -628,6 +635,8 @@ function setOmegaRotMode(){
     document.getElementById("rot_x_deg").disabled=true;
     document.getElementById("rot_y_deg").disabled=true;
     document.getElementById("rot_z_deg").disabled=true;
+    document.getElementById("omg_CCW").disabled=true;
+    document.getElementById("omg_CW").disabled=true;
 
     let psi_h = Math.atan2((u[0]*a_star[1]+u[1]*b_star[1]+u[2]*c_star[1]),(u[0]*a_star[0]+u[1]*b_star[0]+u[2]*c_star[0]))/Math.PI*180.0;
     let Omg_ofst = Omega+psi_h;
