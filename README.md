@@ -1,2 +1,4 @@
-# TAIKAN_detector_map
- Simulation of the Bragg reflection positions from a single crystal at the TAIKAN(BL15) in MLF of J-PARC
+# Neutron Laue diffraction pattern simulator for TAIKAN(BL15)
+
+[Web app.] https://nakajima.issp.u-tokyo.ac.jp/tools/taikan_laue_sim/
+[Tutorial] https://sites.google.com/view/t-nakajima-group/tools/taikan_detector_map
