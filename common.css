@@ -268,7 +268,7 @@ input[type="radio"].rotTypeButton{
 }
 
 .tab_area label{
-	width:140px;
+	width:130px;
 	display:inline-block;
 	padding:5px 0 5px;
 	color:#c0c0c0;	
@@ -304,6 +304,8 @@ input[type="radio"].rotTypeButton{
 #tab1:checked ~ .panel_area #panel1{display:block;}
 #tab2:checked ~ .tab_area .tab2_label{background:#808080; color:#fff;}
 #tab2:checked ~ .panel_area #panel2{display:block;}
+#tab3:checked ~ .tab_area .tab3_label{background:#808080; color:#fff;}
+#tab3:checked ~ .panel_area #panel3{display:block;}
 
 
 .matrix_left{

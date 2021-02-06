@@ -19,6 +19,7 @@ const txt_ofst1=radius+10;   //offset along Y direction for indices shown near e
 const txt_ofst2=3;   //offset along X direction for detector number shown bottom.
 const txt_ofst3=30;   //offset along X direction for detector number shown bottom.
 const fundamental_color="rgb(250, 250, 0)";
+const obs_spot_color="rgb(250, 50, 0)";
 const q_vec_colors = ["rgb(50, 220, 50)","rgb(50, 150, 250)","rgb(250, 150, 100)"];
 const center_gap =10; 
 const center_ofst_X =35; 
@@ -59,6 +60,9 @@ var Lambda_min = 0.7;
 var lambda;             // wavelength 
 
 var Omega=0;
+
+//variables for drawing observed Laue spots-------------------
+var MaxObsSpots=20;
 
 //parameters regarding the detector banks--------------------------------------------------
 var HD = 0;    // height of center of PSD from incident beam (mm)
@@ -317,6 +321,9 @@ function draw_DetMap(){
         context.drawImage(image, 0, 0);
     }
 
+    //draw observed Laue spots
+    draw_observed_Laue_spots(context);
+
     // color setting for circles indicating reflections
     context.strokeStyle = fundamental_color;
     context.fillStyle = fundamental_color;
@@ -391,7 +398,7 @@ function draw_DetMap(){
 
 function drawBraggReflection(context1,H1,K1,L1,isTargetHKL1,showHKL1){
 
-    var canvas = document.getElementById('CanvasDetMap');
+    let canvas = document.getElementById('CanvasDetMap');
 
     let return_value=false;
 
@@ -508,7 +515,52 @@ function phihv2pixels(phih,phiv){    // convert phih to detector number
 
 }
 
+function draw_observed_Laue_spots(context1){
+    let canvas = document.getElementById('CanvasDetMap');
 
+    context1.fillStyle = obs_spot_color;
+
+    for(let i=0;i<MaxObsSpots;i++){
+        let cb_label = 'observed_spot_'+(i+1);
+        let tth_label = 'observed_spot_'+(i+1)+'_tth';
+        let azimuth_label = 'observed_spot_'+(i+1)+'_azimuth';
+        if(document.getElementById(cb_label).checked==true){
+
+            let tth=0;
+            let azimuth=0;
+            if(document.getElementById(tth_label).value){
+                tth=Number(document.getElementById(tth_label).value);
+            }
+            const azimuth_str=document.getElementById(azimuth_label).value;
+            if(document.getElementById(azimuth_label).value){
+                azimuth=Number(document.getElementById(azimuth_label).value);
+            }
+            
+            const X1=Math.cos(tth/180.0*Math.PI);
+            const Y1=Math.sin(tth/180.0*Math.PI)*Math.cos(azimuth/180.0*Math.PI);
+            const Z1=Math.sin(tth/180.0*Math.PI)*Math.sin(azimuth/180.0*Math.PI);
+            const R1=Math.sqrt(X1**2.0+ Y1**2.0+Z1**2.0);
+
+            const phih=Math.atan2(Y1,X1);
+            const phiv=Math.asin(Z1);
+
+            const delta_pixels=phihv2pixels(phih,phiv);
+            let PosX=canvas.width/2 + center_ofst_X-delta_pixels[0];
+            if(delta_pixels[0]>0){
+                PosX+=-center_gap/2;
+            }
+            else{
+                PosX+=center_gap/2;
+            }
+            let PosY=canvas.height/2 +center_ofst_Y-delta_pixels[1];
+            context1.beginPath();
+            context1.arc(PosX,PosY, radius, 0, 2 * Math.PI);
+            context1.fill();    
+        }
+    
+    }
+
+}
 
 function rot_Lattice(rot_ax_dir){
     let angle = 0.0;  // radian unit
