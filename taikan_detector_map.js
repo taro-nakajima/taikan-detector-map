@@ -1,6 +1,6 @@
 //JavaScript code for simulation of neutron Laue diffraction pattern for TAIKAN
 
-var version = "0.1";
+var version = "0.2";
 
 // dimensions of the canvas object
 var scaleX=900;
